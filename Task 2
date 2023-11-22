@@ -1,0 +1,27 @@
+import sklearn
+from mglearn.datasets import load_extended_boston
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the Boston housing dataset
+X, y = load_extended_boston()
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+print(y_pred)
+
+# Plotting actual vs predicted prices
+plt.scatter(y_test, y_pred, color='blue')
+plt.xlabel('Actual Price')
+plt.ylabel('Predicted Price')
+plt.title('Actual vs Predicted House Prices')
+plt.show()
