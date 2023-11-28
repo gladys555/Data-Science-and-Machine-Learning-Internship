@@ -1,17 +1,33 @@
 import sklearn
 from mglearn.datasets import load_extended_boston
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
+import pandas as pd
 
-# Load the Boston housing dataset
-X, y = load_extended_boston()
+# Read the CSV file into a DataFrame
+data = pd.read_csv('house-prices.csv')
+
+# Drop 'Brick' and 'Neighborhood' columns
+data.drop(['Brick', 'Neighborhood'], axis=1, inplace=True)
+
+#gives average value
+average_value = data['Price'].mean()
+
+#adds column Sold with classes 'yes' and 'no'
+data['Sold'] = data['Price'].apply(lambda x: 'yes' if x >= average_value else 'no')
+
+#all features excluding Sold
+concepts = np.array(data.iloc[:,0:-1])
+
+#only includes Sold
+target = np.array(data.iloc[:,-1])
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(concepts, target, test_size=0.2, random_state=42)
 
 # Create and train the linear regression model
-model = LinearRegression()
+model = LogisticRegression()
 model.fit(X_train, y_train)
 
 # Make predictions
